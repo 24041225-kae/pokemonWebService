@@ -1,97 +1,185 @@
+// import express framework
 const express = require('express');
+
+// import mysql promise-based client
 const mysql = require('mysql2/promise');
+
+// load environment variables from .env file
 require('dotenv').config();
+
+// server will run on this port
 const port = 3000;
 
-//database config info
+// database configuration object
 const dbConfig = {
-    //get these details from the env varaibles that set on host server
+    // database host (from .env)
     host: process.env.DB_HOST,
+
+    // database username
     user: process.env.DB_USER,
+
+    // database password
     password: process.env.DB_PASSWORD,
+
+    // database name
     database: process.env.DB_NAME,
+
+    // database port
     port: process.env.DB_PORT,
+
+    // allow waiting if connections are busy
     waitForConnections : true,
+
+    // maximum number of connections
     connectionLimit: 100,
+
+    // unlimited queued connection requests
     queueLimit: 0,
 };
 
-//initialise express app
+// create express application
 const app = express();
-//helps app to read JSON
+
+// allow app to read JSON request bodies
 app.use(express.json());
 
-//start server
+// start server and listen on port 3000
 app.listen(port, ()=>{
     console.log('Server running on port', port);
 });
 
-//route: GET all poke
+// ================= GET ALL POKEMON =================
+
+// route to get all pokemon from database
 app.get('/allpokemon', async (req, res) => {
     try{
-        let connection = await mysql.createConnection(dbConfig); //connects aiven database server
-        const [rows] = await connection.execute('SELECT * FROM defaultdb.pokemon'); //executes mysql query to get rows from pokemon table
-        res.json(rows); //displays retrieved data in JSON
+        // create database connection
+        let connection = await mysql.createConnection(dbConfig);
+
+        // execute SQL query to fetch all rows
+        const [rows] = await connection.execute(
+            'SELECT * FROM defaultdb.pokemon'
+        );
+
+        // send rows back as JSON
+        res.json(rows);
     } catch (err){
-        //displays if server got error
+        // log error to console
         console.log(err);
-        res.status(500).json({message: 'Server error for allpokemon'});
+
+        // send server error response
+        res.status(500).json({
+            message: 'Server error for allpokemon'
+        });
     }
 });
 
-//route: create a new poke
+// ================= ADD POKEMON =================
+
+// route to add a new pokemon
 app.post('/addpokemon', async (req, res)=>{
+    // extract data from request body
     const {pokemon_name, pokemon_type, pokemon_pic} = req.body;
+
     try{
+        // create database connection
         let connection = await mysql.createConnection(dbConfig);
-        await connection.execute('INSERT INTO pokemon (pokemon_name, pokemon_type, pokemon_pic) VALUES (?,?,?)', [pokemon_name, pokemon_type, pokemon_pic]); //adds new row
-        res.status(201).json({message: 'Pokemon ' +pokemon_name+' added successfully'}); //display msg
+
+        // insert new pokemon into database
+        await connection.execute(
+            'INSERT INTO pokemon (pokemon_name, pokemon_type, pokemon_pic) VALUES (?,?,?)',
+            [pokemon_name, pokemon_type, pokemon_pic]
+        );
+
+        // send success response
+        res.status(201).json({
+            message: 'Pokemon ' + pokemon_name + ' added successfully'
+        });
     } catch(err){
+        // log error
         console.log(err);
-        res.status(500).json({message: 'Server error - could not find pokemon '+pokemon_name});
+
+        // send error response
+        res.status(500).json({
+            message: 'Server error - could not find pokemon ' + pokemon_name
+        });
     }
 });
 
+// ================= DELETE POKEMON =================
+
+// route to delete a pokemon
 app.delete('/deletepokemon', async (req, res)=>{
+    // get pokemon name from request body
     const {pokemon_name} = req.body;
+
     try {
+        // create database connection
         let connection = await mysql.createConnection(dbConfig);
 
+        // execute delete query
         const [result] = await connection.execute(
             'DELETE FROM pokemon WHERE pokemon_name = ?',
             [pokemon_name]
         );
 
+        // if no rows were deleted, pokemon doesn't exist
         if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Pokemon not found' });
+            return res.status(404).json({
+                message: 'Pokemon not found'
+            });
         }
 
-        res.json({ message: 'Pokemon deleted successfully' });
+        // send success response
+        res.json({
+            message: 'Pokemon deleted successfully'
+        });
     } catch (err) {
+        // log error
         console.log(err);
-        res.status(500).json({ message: 'Server error - could not delete pokemon' });
-    }
 
+        // send server error
+        res.status(500).json({
+            message: 'Server error - could not delete pokemon'
+        });
+    }
 });
 
-app.put('/updatepokemon', async (req, res) => {
+// ================= UPDATE POKEMON =================
+
+// route to update an existing pokemon
+app.post('/updatepokemon', async (req, res) => {
+    // extract updated data from request body
     const { pokemon_name, pokemon_type, pokemon_pic } = req.body;
 
     try {
+        // create database connection
         let connection = await mysql.createConnection(dbConfig);
 
+        // update pokemon data based on name
         const [result] = await connection.execute(
             'UPDATE pokemon SET pokemon_type = ?, pokemon_pic = ? WHERE pokemon_name = ?',
             [pokemon_type, pokemon_pic, pokemon_name]
         );
 
+        // if no rows updated, pokemon doesn't exist
         if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Pokemon not found' });
+            return res.status(404).json({
+                message: 'Pokemon not found'
+            });
         }
 
-        res.json({ message: 'Pokemon updated successfully' });
+        // send success response
+        res.json({
+            message: 'Pokemon updated successfully'
+        });
     } catch (err) {
+        // log error
         console.log(err);
-        res.status(500).json({ message: 'Server error - could not update pokemon' });
+
+        // send server error
+        res.status(500).json({
+            message: 'Server error - could not update pokemon'
+        });
     }
 });
