@@ -26,7 +26,7 @@ app.listen(port, ()=>{
     console.log('Server running on port', port);
 });
 
-//route: GET all cards
+//route: GET all poke
 app.get('/allpokemon', async (req, res) => {
     try{
         let connection = await mysql.createConnection(dbConfig); //connects aiven database server
@@ -39,16 +39,16 @@ app.get('/allpokemon', async (req, res) => {
     }
 });
 
-//route: create a new card
+//route: create a new poke
 app.post('/addpokemon', async (req, res)=>{
     const {pokemon_name, pokemon_type, pokemon_pic} = req.body;
     try{
         let connection = await mysql.createConnection(dbConfig);
         await connection.execute('INSERT INTO pokemon (pokemon_name, pokemon_type, pokemon_pic) VALUES (?,?,?)', [pokemon_name, pokemon_type, pokemon_pic]); //adds new row
-        res.status(201).json({message: 'Pokemon ' +card_name+' added successfully'}); //display msg
+        res.status(201).json({message: 'Pokemon ' +pokemon_name+' added successfully'}); //display msg
     } catch(err){
         console.log(err);
-        res.status(500).json({message: 'Server error - could not find card '+pokemon_name});
+        res.status(500).json({message: 'Server error - could not find pokemon '+pokemon_name});
     }
 });
 
