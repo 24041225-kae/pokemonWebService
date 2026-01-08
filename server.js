@@ -52,7 +52,7 @@ app.post('/addpokemon', async (req, res)=>{
     }
 });
 
-app.post('/deletepokemon', async (req, res)=>{
+app.delete('/deletepokemon', async (req, res)=>{
     const {pokemon_name} = req.body;
     try {
         let connection = await mysql.createConnection(dbConfig);
@@ -74,7 +74,7 @@ app.post('/deletepokemon', async (req, res)=>{
 
 });
 
-app.post('/updatepokemon', async (req, res) => {
+app.put('/updatepokemon', async (req, res) => {
     const { pokemon_name, pokemon_type, pokemon_pic } = req.body;
 
     try {
