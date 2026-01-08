@@ -109,7 +109,7 @@ app.post('/addpokemon', async (req, res)=>{
 // ================= DELETE POKEMON =================
 
 // route to delete a pokemon
-app.delete('/deletepokemon', async (req, res)=>{
+app.post('/deletepokemon', async (req, res)=>{
     // get pokemon name from request body
     const {pokemon_name} = req.body;
 
