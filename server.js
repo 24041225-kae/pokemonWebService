@@ -48,7 +48,6 @@ app.listen(port, ()=>{
     console.log('Server running on port', port);
 });
 
-// ================= GET ALL POKEMON =================
 
 // route to get all pokemon from database
 app.get('/allpokemon', async (req, res) => {
@@ -74,7 +73,6 @@ app.get('/allpokemon', async (req, res) => {
     }
 });
 
-// ================= ADD POKEMON =================
 
 // route to add a new pokemon
 app.post('/addpokemon', async (req, res)=>{
@@ -106,60 +104,74 @@ app.post('/addpokemon', async (req, res)=>{
     }
 });
 
-// ================= DELETE POKEMON =================
-
-// route to delete a pokemon
-app.post('/deletepokemon', async (req, res)=>{
-    // get pokemon name from request body
-    const {pokemon_name} = req.body;
-
+app.get('/deletepokemon', async (req, res) => {
+    const { idpokemon } = req.query;
     try {
-        // create database connection
         let connection = await mysql.createConnection(dbConfig);
-
-        // execute delete query
-        const [result] = await connection.execute(
-            'DELETE FROM pokemon WHERE pokemon_name = ?',
-            [pokemon_name]
+        const [rows] = await connection.execute(
+            'SELECT * FROM pokemon WHERE idpokemon = ?',
+            [idpokemon]
         );
 
-        // if no rows were deleted, pokemon doesn't exist
-        if (result.affectedRows === 0) {
+        if (rows.length === 0) {
             return res.status(404).json({
                 message: 'Pokemon not found'
             });
         }
 
-        // send success response
+        res.json({
+            message: 'Pokemon found for deletion',
+            pokemon: rows[0]
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Server error - could not fetch pokemon'
+        });
+    }
+});
+// route to delete a pokemon
+app.post('/deletepokemon', async (req, res) => {
+    const { idpokemon } = req.body;
+    try {
+        let connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute(
+            'DELETE FROM pokemon WHERE idpokemon = ?',
+            [idpokemon]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                message: 'Pokemon not found'
+            });
+        }
+        await connection.execute(
+            'ALTER TABLE pokemon AUTO_INCREMENT = 1'
+        );
         res.json({
             message: 'Pokemon deleted successfully'
         });
     } catch (err) {
-        // log error
         console.log(err);
-
-        // send server error
         res.status(500).json({
             message: 'Server error - could not delete pokemon'
         });
     }
 });
 
-// ================= UPDATE POKEMON =================
-
 // route to update an existing pokemon
-app.post('/updatepokemon', async (req, res) => {
+app.put('/updatepokemon', async (req, res) => {
     // extract updated data from request body
-    const { pokemon_name, pokemon_type, pokemon_pic } = req.body;
+    const { idpokemon, pokemon_type, pokemon_pic } = req.body;
 
     try {
         // create database connection
         let connection = await mysql.createConnection(dbConfig);
 
-        // update pokemon data based on name
+        // update pokemon data based on id
         const [result] = await connection.execute(
-            'UPDATE pokemon SET pokemon_type = ?, pokemon_pic = ? WHERE pokemon_name = ?',
-            [pokemon_type, pokemon_pic, pokemon_name]
+            'UPDATE pokemon SET pokemon_type = ?, pokemon_pic = ? WHERE idpokemon = ?',
+            [pokemon_type, pokemon_pic, idpokemon]
         );
 
         // if no rows updated, pokemon doesn't exist
