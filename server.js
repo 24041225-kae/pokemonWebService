@@ -146,7 +146,7 @@ app.post('/deletepokemon', async (req, res) => {
             });
         }
         await connection.execute(
-            'ALTER TABLE pokemon AUTO_INCREMENT = 1'
+            'ALTER TABLE pokemon AUTO_INCREMENT = (SELECT MAX(idpokemon) FROM pokemon) + 1'
         );
         res.json({
             message: 'Pokemon deleted successfully'
