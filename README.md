@@ -26,7 +26,7 @@ https://pokemonwebservice.onrender.com/deletepokemon/5
 ### Delete card using POST:
 https://pokemonwebservice.onrender.com/deletepokemon
 
-**{"idpokemon": 4}**
+**{"idpokemon": 1}**
 ![](/images/postdeletepokemon.gif)
 
 
