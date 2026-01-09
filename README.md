@@ -9,11 +9,13 @@ https://pokemonwebservice.onrender.com/allpokemon
 
 ### Add card:
 https://pokemonwebservice.onrender.com/addpokemon
+
 **{"pokemon_name": "Absol", "pokemon_type": "Dark", "pokemon_pic": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/359.png"}**
 ![](/images/addpokemon.gif)
 
 ### Update card using PUT:
 https://pokemonwebservice.onrender.com/updatepokemon
+
 **{"idpokemon": 5, "pokemon_type": "Light", "pokemon_pic": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/359.png"}**
 ![](/images/updatepokemon.gif)
 
@@ -23,6 +25,7 @@ https://pokemonwebservice.onrender.com/deletepokemon/5
 
 ### Delete card using POST:
 https://pokemonwebservice.onrender.com/deletepokemon
+
 **{"idpokemon": 4}**
 ![](/images/postdeletepokemon.gif)
 
