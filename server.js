@@ -104,8 +104,8 @@ app.post('/addpokemon', async (req, res)=>{
     }
 });
 
-app.get('/deletepokemon', async (req, res) => {
-    const { idpokemon } = req.query;
+app.get('/deletepokemon/:idpokemon', async (req, res) => {
+    const { idpokemon } = req.params;
     try {
         let connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute(
