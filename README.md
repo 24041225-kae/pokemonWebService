@@ -16,7 +16,12 @@ https://pokemonwebservice.onrender.com/addpokemon
 ### Update card using PUT:
 https://pokemonwebservice.onrender.com/updatepokemon
 
-**{"idpokemon": 5, "pokemon_type": "Light", "pokemon_pic": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/359.png"}**
+**{
+  "idpokemon": 3,
+  "pokemon_name": "Pikachu",
+  "pokemon_type": "Electric",
+  "pokemon_pic": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/detail/025.png"
+}**
 ![](/images/updatepokemon.gif)
 
 ### Delete card using GET:
