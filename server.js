@@ -161,7 +161,7 @@ app.post('/deletepokemon', async (req, res) => {
 // route to update an existing pokemon
 app.put('/updatepokemon', async (req, res) => {
     // extract updated data from request body
-    const { idpokemon, pokemon_type, pokemon_pic } = req.body;
+    const { idpokemon, pokemon_name, pokemon_type, pokemon_pic } = req.body;
 
     try {
         // create database connection
@@ -169,8 +169,8 @@ app.put('/updatepokemon', async (req, res) => {
 
         // update pokemon data based on id
         const [result] = await connection.execute(
-            'UPDATE pokemon SET pokemon_type = ?, pokemon_pic = ? WHERE idpokemon = ?',
-            [pokemon_type, pokemon_pic, idpokemon]
+            'UPDATE pokemon SET pokemon_type = ?, pokemon_pic = ?, pokemon_name = ? WHERE idpokemon = ?',
+            [pokemon_type, pokemon_pic, pokemon_name, idpokemon]
         );
 
         // if no rows updated, pokemon doesn't exist
