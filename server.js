@@ -130,7 +130,7 @@ app.get('/deletepokemon/:idpokemon', async (req, res) => {
         });
     }
 });
-// route to delete a pokemon
+
 app.delete('/deletepokemon/:idpokemon', async (req, res) => {
     const { idpokemon } = req.params;
     try {
