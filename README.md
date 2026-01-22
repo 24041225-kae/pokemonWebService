@@ -14,7 +14,7 @@ https://pokemonwebservice.onrender.com/addpokemon
 ![](/images/addpokemon.gif)
 
 ### Update card using PUT:
-https://pokemonwebservice.onrender.com/updatepokemon
+https://pokemonwebservice.onrender.com/updatepokemon/5
 
 **{
   "idpokemon": 3,
@@ -28,8 +28,8 @@ https://pokemonwebservice.onrender.com/updatepokemon
 https://pokemonwebservice.onrender.com/deletepokemon/5
 ![](/images/getdeletepokemon.gif)
 
-### Delete card using POST:
-https://pokemonwebservice.onrender.com/deletepokemon
+### Delete card using PUT:
+https://pokemonwebservice.onrender.com/deletepokemon/5
 
 **{"idpokemon": 1}**
 ![](/images/postdeletepokemon.gif)
