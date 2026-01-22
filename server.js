@@ -131,8 +131,8 @@ app.get('/deletepokemon/:idpokemon', async (req, res) => {
     }
 });
 // route to delete a pokemon
-app.post('/deletepokemon', async (req, res) => {
-    const { idpokemon } = req.body;
+app.post('/deletepokemon/:idpokemon', async (req, res) => {
+    const { idpokemon } = req.params;
     try {
         let connection = await mysql.createConnection(dbConfig);
         const [result] = await connection.execute(
@@ -159,9 +159,10 @@ app.post('/deletepokemon', async (req, res) => {
 });
 
 // route to update an existing pokemon
-app.put('/updatepokemon', async (req, res) => {
+app.put('/updatepokemon/:idpokemon', async (req, res) => {
     // extract updated data from request body
-    const { idpokemon, pokemon_name, pokemon_type, pokemon_pic } = req.body;
+    const { idpokemon } = req.params;
+    const { pokemon_name, pokemon_type, pokemon_pic } = req.body;
 
     try {
         // create database connection
