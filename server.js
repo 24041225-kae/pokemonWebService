@@ -131,7 +131,7 @@ app.get('/deletepokemon/:idpokemon', async (req, res) => {
     }
 });
 // route to delete a pokemon
-app.post('/deletepokemon/:idpokemon', async (req, res) => {
+app.delete('/deletepokemon/:idpokemon', async (req, res) => {
     const { idpokemon } = req.params;
     try {
         let connection = await mysql.createConnection(dbConfig);
